@@ -1,197 +1,217 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar, MapPin, Zap, Users, Binary, ShieldCheck, ArrowUpRight, Share2, Printer } from 'lucide-react';
-import { EVENTS_DB } from './EventsPage';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Calendar, MapPin, ArrowLeft, Loader2, 
+  ShieldCheck, Database, Zap, FileText, 
+  ChevronLeft, ChevronRight, Maximize2
+} from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
 import '../styles/Events.css';
 
 const EventDetailPage = () => {
   const { id } = useParams();
-  const event = EVENTS_DB.find(e => e.id === id);
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  if (!event) return <div className="min-h-screen pt-40 text-center text-white uppercase font-black tracking-widest text-4xl">MISSION_NOT_FOUND</div>;
+  useEffect(() => {
+    const fetchEventData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .eq('id', id)
+          .single();
+        
+        if (data) setEvent(data);
+      } catch (err) {
+        console.error("Dossier Access Error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fadeUp = {
-    initial: { opacity: 0, y: 40 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true },
-    transition: { duration: 1, ease: [0.25, 1, 0.5, 1] }
-  };
+    fetchEventData();
+    window.scrollTo(0, 0);
+  }, [id]);
 
-  return (
-    <div className="event-detail-page">
-      {/* 01. NAVIGATION OVERLAY */}
-      <div className="max-w-7xl mx-auto mb-16 flex justify-between items-center opacity-60">
-         <Link to="/events" className="flex items-center gap-3 text-white/40 hover:text-primary transition-all text-[10px] font-black tracking-[0.4em] uppercase">
-            <ArrowLeft size={18} /> CLOSE_LOG_ARCHIVE
-         </Link>
-         <div className="flex gap-6">
-            <Share2 size={16} className="cursor-pointer hover:text-primary transition-colors" />
-            <Printer size={16} className="cursor-pointer hover:text-primary transition-colors" />
-         </div>
-      </div>
-
-      {/* 02. REFINED HEADER */}
-      <header className="detail-header-refined">
-         <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="refined-badge mb-8"
-         >
-            MISN_INTEL_DB_{event.id.toUpperCase()}
-         </motion.div>
-         <motion.h1 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-            className="detail-title-new"
-         >
-            {event.title}
-         </motion.h1>
-
-         <div className="detail-meta-bar">
-            <div className="meta-item-refined">
-               <span>DATE_LOG</span>
-               <span>{event.date}</span>
-            </div>
-            <div className="w-[1px] h-4 bg-white/10" />
-            <div className="meta-item-refined">
-               <span>LOC_QUERY</span>
-               <span>{event.location}</span>
-            </div>
-            <div className="w-[1px] h-4 bg-white/10" />
-            <div className="meta-item-refined">
-               <span>STATUS</span>
-               <span className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                  ARCHIVED_LOG
-               </span>
-            </div>
-         </div>
-      </header>
-
-      {/* 03. CINEMATIC VISUAL STAGE */}
-      <motion.section 
-         initial={{ opacity: 0, scale: 0.98 }}
-         animate={{ opacity: 1, scale: 1 }}
-         transition={{ duration: 1 }}
-         className="detail-visual-stage group"
-      >
-         <img src={event.mainImage} alt={event.title} className="detail-main-img" />
-         <div className="stage-hud-overlay" />
-         <div className="stage-badge">MISSION_RECAP_VISUAL_FEED</div>
-         
-         {/* HUD Elements */}
-         <div className="absolute top-10 right-10 flex flex-col gap-2 opacity-20 group-hover:opacity-100 transition-opacity">
-            <div className="w-12 h-1 bg-primary" />
-            <div className="w-8 h-1 bg-primary ml-4" />
-         </div>
-      </motion.section>
-
-      {/* 04. CONTENT WRAPPER */}
-      <div className="detail-content-wrap">
-         <motion.p {...fadeUp} className="detail-summary-text">
-            {event.fullDesc}
-         </motion.p>
-
-         {/* INTEL GRID */}
-         <div className="mission-intel-grid">
-            {/* SEGMENTS */}
-            <motion.div {...fadeUp} className="intel-block">
-               <h2 className="intel-block-title"><Binary size={20} className="text-primary" /> MISSION_SEGMENTS</h2>
-               <div className="intel-list">
-                  {event.tracks.map((track, i) => (
-                    <div key={i} className="group border-b border-white/5 pb-6 last:border-0">
-                       <h3 className="text-sm font-black text-white group-hover:text-primary transition-colors tracking-widest uppercase mb-2">{track.title}</h3>
-                       <p className="text-xs text-white/30 leading-relaxed font-light">{track.desc}</p>
-                    </div>
-                  ))}
-               </div>
-            </motion.div>
-
-            {/* PROTOCOLS */}
-            <motion.div {...fadeUp} transition={{ delay: 0.2 }} className="intel-block">
-               <h2 className="intel-block-title"><ShieldCheck size={20} className="text-primary" /> PROTOCOL_LOGS</h2>
-               <ul className="intel-list">
-                  {event.outcomes.map((outcome, i) => (
-                    <li key={i} className="intel-item group">
-                       <div className="intel-dot" />
-                       <span className="text-white/40 group-hover:text-white/70 transition-colors">
-                         {outcome}
-                       </span>
-                    </li>
-                  ))}
-               </ul>
-            </motion.div>
-         </div>
-
-      
-
-         {/* 05. TACTICAL 3D MISSION DECK */}
-         <div className="section-header-refined mb-10">
-            <div className="refined-badge">VISUAL_INTEL_STREAM</div>
-            <h2 className="refined-title text-center">MISSION CAPTURES</h2>
-            <div className="refined-underline mx-auto" />
-         </div>
-
-         <MissionIntelDeck images={Array.from({ length: 20 }).map((_, i) => new URL(`../assets/img/gallery-${i + 1}.webp`, import.meta.url).href)} />
-      </div>
+  if (loading) return (
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-primary font-black uppercase tracking-[1em]">
+       <Loader2 className="animate-spin" size={40} />
+       Decrypting Mission Intel...
     </div>
   );
-};
 
-// TACTICAL 3D MISSION DECK COMPONENT
-const MissionIntelDeck = ({ images }) => {
-  const [index, setIndex] = React.useState(0);
+  if (!event) return (
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white">
+       <h1 className="text-4xl font-black mb-8 italic text-primary">404_INTEL_GHOST</h1>
+       <p className="text-white/40 mb-12">This mission log does not exist in the neural network.</p>
+       <Link to="/events" className="px-8 py-3 bg-white/5 border border-white/10 rounded-full hover:bg-primary transition-all text-sm font-black uppercase tracking-widest">
+         Return to Base
+       </Link>
+    </div>
+  );
 
-  // Autoplay Lifecycle
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex(prev => (prev + 1) % images.length);
-    }, 5000); // 5s for cinematic feel
-    return () => clearInterval(timer);
-  }, [images.length]);
+  // Gallery Logic
+  const gallery = event.gallery && event.gallery.length > 0 
+    ? event.gallery 
+    : [event.image_url, event.image_url]; // Fallback to cover if no gallery
 
-  const getPosition = (i) => {
-    if (i === index) return "active";
-    if (i === (index - 1 + images.length) % images.length) return "prev";
-    if (i === (index + 1) % images.length) return "next";
-    return "hidden-state";
-  };
+  const nextSlide = () => setActiveImageIndex((prev) => (prev + 1) % gallery.length);
+  const prevSlide = () => setActiveImageIndex((prev) => (prev - 1 + gallery.length) % gallery.length);
 
   return (
-    <div className="deck-viewer-wrap">
-       <div className="deck-stage">
-          {images.map((img, i) => (
-            <div key={i} className={`deck-item ${getPosition(i)}`}>
-               <img src={img} alt={`Intel ${i}`} className="w-full h-full object-cover" />
-               <div className="scan-line" />
-               
-               {/* TOP HUD MARKERS */}
-               <div className="absolute top-6 left-6 flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                  <span className="text-[10px] font-black text-white/40 tracking-widest uppercase">
-                    ACTIVE_FEED_{i+1 < 10 ? `0${i+1}` : i+1}
-                  </span>
-               </div>
-            </div>
-          ))}
-       </div>
+    <div className="event-detail-page bg-[#020408]">
+      {/* 01. NAVIGATION & HEADER */}
+      <header className="detail-header-refined">
+        <Link to="/events" className="flex items-center gap-3 text-white/30 hover:text-primary transition-all mb-12 group">
+           <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-primary">
+              <ArrowLeft size={16} />
+           </div>
+           <span className="text-[10px] font-black uppercase tracking-widest">Back to Archives</span>
+        </Link>
+        
+        <motion.h1 
+          initial={{ opacity: 0, x: -30 }} 
+          animate={{ opacity: 1, x: 0 }}
+          className="detail-title-new"
+        >
+          {event.title}
+        </motion.h1>
 
-       {/* MISSION STATUS DOTS */}
-       <div className="deck-hud-nav">
-          {images.map((_, i) => (
-            <button 
-              key={i}
-              onClick={() => setIndex(i)}
-              className={`hud-dot ${index === i ? 'active' : ''}`}
-            >
-               <div className="dot-fill" style={{ 
-                 transitionDuration: index === i ? '5000ms' : '0ms' 
-               }} />
-            </button>
-          ))}
-       </div>
+        <div className="detail-meta-bar">
+           <div className="meta-item-refined">
+              <span>DEPLOYMENT_DATE</span>
+              <span>{event.date}</span>
+           </div>
+           <div className="w-[1px] h-8 bg-white/5 hidden md:block" />
+           <div className="meta-item-refined">
+              <span>TARGET_LOCATION</span>
+              <span>{event.location}</span>
+           </div>
+           <div className="w-[1px] h-8 bg-white/5 hidden md:block" />
+           <div className="meta-item-refined">
+              <span>MISSION_ID</span>
+              <span className="text-white/40">#{String(event.id).slice(-6).toUpperCase()}</span>
+           </div>
+        </div>
+      </header>
+
+      {/* 02. CINEMATIC STAGE */}
+      <section className="detail-visual-stage group">
+         <div className="stage-hud-overlay" />
+         <img src={event.image_url} alt="Cover" className="detail-main-img" />
+         <div className="stage-badge">MISSION_ASSET_01</div>
+         
+         <div className="absolute top-8 right-8 flex gap-4">
+            <div className="p-3 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full text-white/40">
+               <ShieldCheck size={20} />
+            </div>
+         </div>
+      </section>
+
+      {/* 03. MISSION INTEL REPORT */}
+      <div className="detail-content-wrap">
+         <motion.div 
+           initial={{ opacity: 0 }} 
+           whileInView={{ opacity: 1 }}
+           className="detail-summary-text"
+         >
+            {event.description}
+         </motion.div>
+
+         <div className="mission-intel-grid">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} className="intel-block">
+               <div className="flex items-center gap-4 mb-8 text-primary">
+                  <FileText size={20} />
+                  <h4 className="text-sm font-black uppercase tracking-widest">Intelligence Report</h4>
+               </div>
+               <div className="text-white/50 text-base leading-loose font-light space-y-6">
+                  {event.full_description?.split('\n').map((para, i) => (
+                    <p key={i}>{para}</p>
+                  ))}
+               </div>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} className="intel-block">
+               <div className="flex items-center gap-4 mb-8 text-primary">
+                  <Database size={20} />
+                  <h4 className="text-sm font-black uppercase tracking-widest">Technical Schematics</h4>
+               </div>
+               <div className="space-y-6">
+                  <div className="p-6 bg-white/[0.02] border border-white/[0.05] rounded-2xl">
+                     <span className="text-[10px] font-black text-white/20 block mb-2">STATUS</span>
+                     <span className="text-sm text-white font-bold uppercase tracking-wider">Operational Success</span>
+                  </div>
+                  <div className="p-6 bg-white/[0.02] border border-white/[0.05] rounded-2xl">
+                     <span className="text-[10px] font-black text-white/20 block mb-2">SECURITY_LEVEL</span>
+                     <span className="text-sm text-white font-bold uppercase tracking-wider">Level 4 Certified</span>
+                  </div>
+                  <div className="p-6 bg-white/[0.02] border border-white/[0.05] rounded-2xl">
+                     <span className="text-[10px] font-black text-white/20 block mb-2">COMMITTEE</span>
+                     <span className="text-sm text-white font-bold uppercase tracking-wider">Multiple Task Forces</span>
+                  </div>
+               </div>
+            </motion.div>
+         </div>
+      </div>
+
+      {/* 04. TACTICAL MISSION DECK (IMAGE SLIDER) */}
+      <section className="max-w-7xl mx-auto mb-40 px-6">
+         <div className="flex items-center justify-between mb-16">
+            <h3 className="text-2xl font-black uppercase tracking-tighter">Mission <span className="text-primary italic">Visuals</span></h3>
+            <div className="flex gap-4">
+               <button onClick={prevSlide} className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all text-white"><ChevronLeft size={20}/></button>
+               <button onClick={nextSlide} className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all text-white"><ChevronRight size={20}/></button>
+            </div>
+         </div>
+
+         <div className="deck-viewer-wrap">
+            <div className="deck-stage">
+               {gallery.map((img, idx) => {
+                  let position = "hidden-state";
+                  if (idx === activeImageIndex) position = "active";
+                  else if (idx === (activeImageIndex - 1 + gallery.length) % gallery.length) position = "prev";
+                  else if (idx === (activeImageIndex + 1) % gallery.length) position = "next";
+
+                  return (
+                     <div key={idx} className={`deck-item ${position}`}>
+                        <div className="scan-line" />
+                        <img src={img} alt={`Slide ${idx}`} className="w-full h-full object-cover" />
+                        <div className="absolute bottom-10 left-10 flex items-center gap-4">
+                           <div className="w-10 h-[10px] bg-primary border-r-2 border-white/20" />
+                           <span className="text-[10px] font-black text-white uppercase tracking-[0.5em]">ASSET_{idx + 1}</span>
+                        </div>
+                     </div>
+                   );
+               })}
+            </div>
+
+            <div className="deck-hud-nav">
+               {gallery.map((_, idx) => (
+                  <div 
+                    key={idx} 
+                    className={`hud-dot ${idx === activeImageIndex ? 'active' : ''}`}
+                    onClick={() => setActiveImageIndex(idx)}
+                  >
+                     <div className="dot-fill" />
+                  </div>
+               ))}
+            </div>
+         </div>
+      </section>
+
+      {/* 05. CALL TO ACTION */}
+      <section className="max-w-5xl mx-auto text-center py-40">
+         <div className="w-16 h-1 bg-primary/20 mx-auto mb-12 rounded-full" />
+         <h2 className="text-3xl md:text-5xl font-black text-white uppercase mb-12 tracking-tighter">Ready for the Next <span className="text-primary">Operation?</span></h2>
+         <Link to="/join" className="group relative inline-flex items-center gap-4 px-12 py-6 bg-primary text-white font-black uppercase tracking-[0.3em] rounded-full overflow-hidden">
+            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+            <span className="relative z-10">Join the Collective</span>
+            <Zap size={20} className="relative z-10" />
+         </Link>
+      </section>
     </div>
   );
 };

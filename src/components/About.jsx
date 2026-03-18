@@ -19,7 +19,7 @@ const About = () => {
             className="codex-label"
           >
             <span className="codex-label-dot" />
-            <span className="codex-label-text">WHO WE ARE</span>
+            <span className="codex-label-text">WHO ARE WE</span>
           </motion.div>
           
           <motion.h2 

@@ -1,14 +1,22 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowUpRight } from 'lucide-react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import flag from '../assets/img/falg-white.webp'
 import '../styles/Navbar.css'
+import '../styles/Admin.css'
+import { Menu, X, ArrowUpRight, Lock, ShieldCheck, Fingerprint, LogIn } from 'lucide-react'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
+  
+  // ADMIN STEALTH STATES
+  const [logoClicks, setLogoClicks] = useState(0)
+  const [showAdminLogin, setShowAdminLogin] = useState(false)
+  const [loginData, setLoginData] = useState({ user: '', pass: '' })
+  const [loginError, setLoginError] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 40)
@@ -32,11 +40,25 @@ const Navbar = () => {
       >
         {/* Left: Branding */}
         <div className="nav-logo-area">
-          <Link to="/" className="flex items-center">
+          <Link 
+            to="/" 
+            className="flex items-center cursor-default"
+            onClick={(e) => {
+              // Secret Admin Entry: 5 clicks
+              const newCount = logoClicks + 1;
+              if (newCount >= 5) {
+                setShowAdminLogin(true);
+                setLogoClicks(0);
+                e.preventDefault();
+              } else {
+                setLogoClicks(newCount);
+              }
+            }}
+          >
             <motion.img 
               src={flag} 
               alt="IEEE Flag" 
-              className="h-10 sm:h-12 w-auto"
+              className="h-10 sm:h-12 w-auto pointer-events-none"
               whileHover={{ scale: 1.05 }}
             />
           </Link>
@@ -74,9 +96,9 @@ const Navbar = () => {
 
         {/* Right: Actions */}
         <div className="nav-action-area flex items-center gap-4">
-          <button className="dock-btn hidden md:flex items-center gap-2">
+          <Link to="/join" className="dock-btn hidden md:flex items-center gap-2">
             JOIN <ArrowUpRight size={14} />
-          </button>
+          </Link>
           
           <button 
             className="mobile-toggle"
@@ -150,9 +172,9 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <button className="hud-primary-btn">
-                   JOIN us
-                </button>
+                <Link to="/join" className="hud-primary-btn inline-block text-center w-full" onClick={() => setMobileMenuOpen(false)}>
+                   JOIN US
+                </Link>
               </motion.div>
             </div>
 
@@ -168,6 +190,73 @@ const Navbar = () => {
             <div className="hud-corner-tl" />
             <div className="hud-corner-br" />
           </motion.div>
+        )}
+      </AnimatePresence>
+      {/* ADMIN LOGIN MODAL */}
+      <AnimatePresence>
+        {showAdminLogin && (
+          <div className="admin-login-overlay px-4">
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="login-card"
+            >
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-primary/20">
+                  <Fingerprint size={32} className="text-primary" />
+                </div>
+                <h3 className="text-2xl font-black text-primary uppercase tracking-widest">Admin Authorization</h3>
+                <p className="text-white/30 text-[10px] uppercase font-bold tracking-widest mt-2">IEEE ERU SB Command Control</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1">
+                   <p className="text-[10px] font-black text-white/40 uppercase ml-2">Access Key (User)</p>
+                   <input 
+                      type="text" 
+                      placeholder="Enter Username"
+                      className={`login-field ${loginError ? 'border-red-500/50 bg-red-500/5' : ''}`}
+                      onChange={(e) => setLoginData({...loginData, user: e.target.value})}
+                   />
+                </div>
+                <div className="space-y-1">
+                   <p className="text-[10px] font-black text-white/40 uppercase ml-2">Secure Pass</p>
+                   <input 
+                      type="password" 
+                      placeholder="Enter Password"
+                      className={`login-field ${loginError ? 'border-red-500/50 bg-red-500/5' : ''}`}
+                      onChange={(e) => setLoginData({...loginData, pass: e.target.value})}
+                   />
+                </div>
+              </div>
+
+              {loginError && (
+                <div className="mt-4 text-center">
+                  <p className="text-red-500 text-[10px] font-black uppercase tracking-widest">Invalid Logic Matrix (Access Denied)</p>
+                </div>
+              )}
+
+              <div className="mt-10 mb-6 px-1 flex flex-col gap-3">
+                 <button 
+                    onClick={() => {
+                        if (loginData.user === 'ieeeeru' && loginData.pass === 'ieeeeru') {
+                            setLogoClicks(0);
+                            setShowAdminLogin(false);
+                            navigate('/dashboard');
+                        } else {
+                            setLoginError(true);
+                            setTimeout(() => setLoginError(false), 2000);
+                        }
+                    }} 
+                    className="admin-action-btn justify-center"
+                 >
+                    <LogIn size={14} /> Authorize Access
+                 </button>
+                 <button onClick={() => setShowAdminLogin(false)} className="text-[10px] font-black text-white/20 uppercase hover:text-white transition-colors">Abort Mission</button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>

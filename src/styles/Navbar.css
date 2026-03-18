@@ -64,7 +64,7 @@
 
 @keyframes typing-masterpiece {
   0%, 5% { width: 0; }
-  45%, 80% { width: 14ch; } /* Stay fully typed */
+  45%, 80% { width: 12ch; } /* Stay fully typed */
   95%, 100% { width: 0; }   /* Erase back to start */
 }
 

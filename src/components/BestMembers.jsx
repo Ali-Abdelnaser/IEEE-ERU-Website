@@ -1,43 +1,30 @@
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Award, Zap, Code, Users } from 'lucide-react'
+import { Award, Zap, Code, Users, Star } from 'lucide-react'
+import { supabase } from '../lib/supabaseClient'
 import '../styles/BestMembers.css'
 
-// Assuming images will be added to assets/img/
-// Use placeholders or actual paths (you mentioned you will add them)
-// Use local path strings instead of static imports to prevent Vite from crashing if files are missing.
-// Once you add the files to assets/img/, you can revert to static imports for optimization.
-import rokayaImg from '../assets/img/rokaya.webp';
-import yasserImg from '../assets/img/yasser.webp';
-import atefImg from '../assets/img/atef.webp';
-
-const members = [
-  {
-    name: "Rokaya Hussein",
-    role: "Marketing",
-    unit: "UNIT_MKT",
-    rank: "ELITE_X",
-    icon: <Users size={12} />,
-    image: rokayaImg
-  },
-  {
-    name: "Yasser Mogahed",
-    role: "Projects",
-    unit: "UNIT_PROJ",
-    rank: "ELITE_P",
-    icon: <Code size={12} />,
-    image: yasserImg
-  },
-  {
-    name: "Atef Mohamed",
-    role: "PR",
-    unit: "UNIT_PR",
-    rank: "ELITE_R",
-    icon: <Zap size={12} />,
-    image: atefImg
-  }
-]
-
 const BestMembers = () => {
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      const { data, error } = await supabase
+        .from('best_members')
+        .select('*')
+        .order('created_at', { ascending: true });
+      
+      if (data) setMembers(data);
+      setLoading(false);
+      if (error) console.error("Elite Fetch Error:", error);
+    };
+
+    fetchMembers();
+  }, []);
+
+  if (loading) return null; // Or a subtle loader
+
   return (
     <section className="best-members-section">
       <div className="best-container">
@@ -91,7 +78,7 @@ const BestMembers = () => {
                   <div className="member-energy-ring" />
                   <div className="member-avatar-frame">
                     <img 
-                      src={member.image} 
+                      src={member.image_url} 
                       alt={member.name} 
                       className="member-img" 
                       onError={(e) => {
@@ -106,7 +93,7 @@ const BestMembers = () => {
                   <h3 className="member-name">{member.name}</h3>
                   <div className="member-role">
                       <span className="flex items-center gap-2">
-                        {member.icon} {member.role}
+                        <Star size={12} /> {member.role}
                       </span>
                   </div>
                 </div>

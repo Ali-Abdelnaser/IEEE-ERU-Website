@@ -56,11 +56,11 @@
 
 /* --- EVENT GRID: THE ARCHIVE --- */
 .events-grid {
-  @apply max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10;
+  @apply max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 auto-rows-fr;
 }
 
 .event-card {
-  @apply rounded-[2.5rem] bg-white/[0.01] border border-white/5 overflow-hidden transition-all duration-500 flex flex-col relative;
+  @apply rounded-[2.5rem] bg-white/[0.01] border border-white/5 overflow-hidden transition-all duration-500 flex flex-col relative h-full;
 }
 
 .event-card:hover {
@@ -100,7 +100,10 @@
 }
 
 .event-card-excerpt {
-  @apply text-sm text-white/30 leading-relaxed mb-10 font-light;
+  @apply text-sm text-white/30 leading-relaxed mb-10 font-light line-clamp-3 overflow-hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .event-card-btn {
@@ -176,14 +179,14 @@
   @apply absolute top-0 left-0 w-1 h-full bg-primary/20;
 }
 
-/* --- TACTICAL 3D MISSION DECK (WOW FACTOR) --- */
+/* --- TACTICAL 3D MISSION DECK (OPTIMIZED SPACE) --- */
 .deck-viewer-wrap {
-  @apply relative w-full mb-40 py-40 overflow-hidden;
+  @apply relative w-full  overflow-hidden;
   perspective: 2000px;
 }
 
 .deck-stage {
-  @apply relative w-full h-[300px] md:h-[500px] flex items-center justify-center;
+  @apply relative w-full h-[400px] md:h-[550px] flex items-center justify-center;
   transform-style: preserve-3d;
 }
 
@@ -283,12 +286,26 @@
   .mission-intel-grid { @apply gap-8 mb-24; }
   .intel-block { @apply p-8 rounded-[2rem]; }
 
-  /* DECK MOBILE */
-  .deck-item { @apply w-[92vw] rounded-[2rem]; }
-  .deck-item.prev { transform: translate3d(-35%, 0, -200px) rotateY(35deg); }
-  .deck-item.next { transform: translate3d(35%, 0, -200px) rotateY(-35deg); }
-  .hud-dot { @apply w-8; }
-  .hud-dot.active { @apply w-12; }
+  /* DECK MOBILE CALIBRATION */
+  .deck-stage { @apply h-[350px]; }
+  .deck-item { @apply w-[80vw] rounded-[2rem]; }
+  
+  .deck-item.active {
+    transform: translate3d(0, 0, 80px) rotateY(0deg);
+  }
+  
+  .deck-item.prev { 
+    @apply opacity-20;
+    transform: translate3d(-30%, 0, -180px) rotateY(35deg); 
+  }
+  
+  .deck-item.next { 
+    @apply opacity-20;
+    transform: translate3d(30%, 0, -180px) rotateY(-35deg); 
+  }
+  
+  .hud-dot { @apply w-6; }
+  .hud-dot.active { @apply w-10; }
 }
 
 @media (max-width: 480px) {

@@ -1,0 +1,153 @@
+@reference "../index.css";
+
+/* --- THE CLEAN TACTICAL COMMAND CENTER (SINGLE PAGE) --- */
+.join-page {
+  @apply min-h-screen bg-[#020408] relative pt-32 pb-40 px-4 md:px-6 flex flex-col items-center;
+}
+
+/* BACKGROUND ACCENTS */
+.join-glow-top {
+  @apply absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[500px] opacity-20 pointer-events-none;
+  background: radial-gradient(circle at 50% 0%, var(--color-primary) 0%, transparent 70%);
+}
+
+/* MAIN FORM CONTAINER */
+.join-container {
+  @apply w-full max-w-5xl relative z-10;
+}
+
+.join-hero-header {
+  @apply text-center mb-16 space-y-4;
+}
+
+.join-title {
+  @apply text-5xl md:text-7xl font-black text-white tracking-tighter uppercase leading-[0.9];
+}
+
+.join-subtitle {
+  @apply text-primary font-black tracking-[0.4em] uppercase text-xs animate-pulse;
+}
+
+.join-description-text {
+  @apply max-w-3xl mx-auto text-white/50 text-base md:text-lg leading-relaxed font-light mt-8;
+}
+
+/* FORM CARD */
+.form-card {
+  @apply glass rounded-[3rem] p-8 md:p-16 border border-white/5 relative overflow-hidden;
+}
+
+.form-card::before {
+  content: "";
+  @apply absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50;
+}
+
+/* SECTIONS */
+.form-section {
+  @apply mb-20 last:mb-0;
+}
+
+.section-header {
+  @apply flex items-center gap-4 mb-10 pb-4 border-b border-white/5;
+}
+
+.section-num {
+  @apply text-primary font-black text-sm tracking-widest opacity-50;
+}
+
+.section-title {
+  @apply text-xl font-bold text-white uppercase tracking-[0.2em];
+}
+
+/* FIELDS & GRID */
+.input-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-8;
+}
+
+.field-group {
+  @apply space-y-3;
+}
+
+.field-group.full {
+  @apply md:col-span-2;
+}
+
+.field-label {
+  @apply block text-[10px] font-black text-white/40 tracking-[0.3em] uppercase ml-1;
+}
+
+.form-field {
+  @apply w-full bg-white/[0.03] border border-white/10 rounded-2xl px-6 py-5 text-white placeholder-white/10 outline-none transition-all duration-300;
+  @apply focus:border-primary/50 focus:bg-white/[0.05] focus:shadow-[0_0_30px_rgba(0,122,204,0.1)];
+}
+
+.form-textarea {
+  @apply min-h-[120px] resize-none;
+}
+
+/* SELECTION GRID (Faculties/Positions) */
+.selection-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3;
+}
+
+.selection-item {
+  @apply relative flex items-center gap-4 p-5 rounded-2xl border border-white/5 bg-white/[0.01] cursor-pointer transition-all hover:bg-white/[0.04] overflow-hidden;
+}
+
+.selection-item.active {
+  @apply border-primary/40 bg-primary/10 shadow-[0_10px_20px_rgba(0,122,204,0.1)];
+}
+
+.selection-indicator {
+  @apply w-4 h-4 rounded-full border-2 border-white/20 flex items-center justify-center shrink-0;
+}
+
+.selection-item.active .selection-indicator {
+  @apply border-primary;
+}
+
+.selection-dot {
+  @apply w-2 h-2 bg-primary rounded-full opacity-0 scale-0 transition-all duration-300;
+}
+
+.selection-item.active .selection-dot {
+  @apply opacity-100 scale-100 shadow-[0_0_10px_rgba(0,122,204,1)];
+}
+
+.selection-text {
+  @apply text-xs font-bold text-white/60 transition-colors;
+}
+
+.selection-item.active .selection-text {
+  @apply text-white;
+}
+
+/* SECURE UPLOAD */
+.upload-zone {
+  @apply border-2 border-dashed border-white/10 rounded-[2.5rem] p-12 text-center transition-all hover:bg-white/[0.03] hover:border-primary/40 relative cursor-pointer;
+}
+
+.file-info {
+  @apply flex flex-col items-center gap-4;
+}
+
+/* SUBMIT BUTTON ACTION */
+.submit-action-wrap {
+  @apply mt-20 flex flex-col items-center gap-6;
+}
+
+.final-submit-btn {
+  @apply min-w-[300px] py-6 px-12 rounded-2xl bg-primary text-white font-black uppercase tracking-[0.4em] text-sm shadow-2xl transition-all duration-300;
+  @apply shadow-[0_15px_40px_rgba(0,122,204,0.4)] hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,122,204,0.5)] active:scale-95;
+}
+
+.submit-hint {
+  @apply text-[10px] font-black tracking-[0.3em] text-white/20 uppercase;
+}
+
+@media (max-width: 768px) {
+  .join-page { @apply pt-24 px-4; }
+  .form-card { @apply p-6 py-10 rounded-[2rem]; }
+  .join-title { @apply text-4xl; }
+  .selection-grid { @apply grid-cols-1; }
+}

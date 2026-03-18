@@ -5,10 +5,11 @@ import Home from './pages/Home'
 import AboutPage from './pages/AboutPage'
 import EventsPage from './pages/EventsPage'
 import EventDetailPage from './pages/EventDetailPage'
+import JoinUsPage from './pages/JoinUsPage'
+import AdminDashboard from './pages/AdminDashboard'
 
 // Dummy pages for now
 const Teams = () => <div className="pt-32 min-h-screen text-center"><h1>Teams Page Coming Soon</h1></div>
-const Dashboard = () => <div className="pt-32 min-h-screen text-center"><h1>Hidden Dashboard - Supabase Integrated</h1></div>
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
             <Route path="/events" element={<EventsPage />} />
             <Route path="/events/:id" element={<EventDetailPage />} />
             <Route path="/teams" element={<Teams />} />
-            <Route path="/dashboard-x" element={<Dashboard />} /> {/* Hidden dashboard route */}
+            <Route path="/join" element={<JoinUsPage />} />
+            <Route path="/dashboard" element={<AdminDashboard />} /> {/* Hidden dashboard route */}
           </Routes>
         </main>
         <Footer />

@@ -1,60 +1,110 @@
 @reference "../index.css";
 
 .footer-section {
-  @apply py-24 md:py-14 relative overflow-hidden;
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  @apply py-8 md:py-6 relative overflow-hidden bg-transparent;
 }
 
 .footer-section::before {
-  content: "";
-  @apply absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-20 pointer-events-none;
-  background: radial-gradient(circle at top, rgba(0, 122, 204, 0.15) 0%, transparent 60%);
+  @apply absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 opacity-10 pointer-events-none;
+  background: radial-gradient(circle at top, rgba(0, 122, 204, 0.05) 0%, transparent 70%);
 }
 
 .footer-container {
-  @apply container mx-auto px-6 relative z-10;
+  @apply w-full max-w-[1440px] mx-auto px-6 md:px-4 relative z-10;
 }
 
-.footer-grid {
-  @apply grid grid-cols-1 md:grid-cols-4 gap-12 mb-16 text-center md:text-left;
+/* SINGLE ROW GRID - COMPACT (SAWA SAWA MODE) */
+.footer-main-grid-single-row {
+  @apply grid grid-cols-1 lg:grid-cols-[auto_1fr_1fr] gap-12 lg:gap-16 mb-8 items-center;
 }
 
-.footer-logo-area {
-  @apply col-span-1 md:col-span-2 flex flex-col items-center md:items-start;
+.footer-logo-unit {
+  @apply flex items-center lg:pr-12 lg:border-r lg:border-white/5; /* Separator for premium look */
 }
 
-.footer-logo {
-  @apply h-12 md:h-16 w-auto object-contain mb-6;
+.footer-logo-compact-row {
+  @apply w-full max-w-[140px] md:max-w-[180px] h-auto object-contain transition-all duration-700;
+  filter: drop-shadow(0 0 20px rgba(0, 122, 204, 0.2));
 }
 
-.footer-mission {
-  @apply text-white/40 text-sm leading-relaxed max-w-sm mx-auto md:mx-0;
+.footer-intel-unit {
+  @apply flex flex-col lg:pl-4; /* Start immediately after the separator */
 }
 
-.footer-links-title {
-  @apply text-white font-black mb-8 tracking-[0.3em] uppercase text-[10px];
+.footer-description-compact {
+  @apply text-white/30 text-[11px] leading-relaxed tracking-wider font-light max-w-sm;
 }
 
-.footer-list {
-  @apply flex flex-col gap-5;
+.footer-contacts-compact {
+  @apply flex flex-col gap-2 mt-4;
 }
 
-.footer-link {
-  @apply text-white/40 text-[13px] hover:text-white transition-all duration-300 flex items-center justify-center md:justify-start gap-2;
+.contact-row-mini {
+  @apply flex items-center gap-3 text-[9px] font-black uppercase text-white/20 tracking-widest hover:text-white transition-all duration-300;
 }
 
-.footer-bottom {
-  @apply pt-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8;
+/* FEEDBACK UNIT - SINGLE ROW COMPACT */
+.footer-feedback-unit {
+  @apply w-full max-w-sm lg:justify-self-end; /* Push feedback to the far right */
 }
 
-.footer-copy {
-  @apply text-white/20 text-[10px] tracking-wider;
+.feedback-input-compact {
+  @apply w-full bg-white/[0.02] border border-white/5 rounded-xl p-4 text-white text-[10px] outline-none focus:border-primary/40 focus:bg-white/[0.04] transition-all min-h-[90px] resize-none leading-relaxed;
 }
 
-.footer-socials {
-  @apply flex items-center gap-8;
+.feedback-btn-mini {
+  @apply flex items-center justify-between px-6 py-2 bg-primary/10 border border-primary/20 rounded-xl text-primary text-[8px] font-black uppercase tracking-widest transition-all hover:bg-primary hover:text-white disabled:opacity-50 mt-2;
 }
 
-.social-icon-link {
-  @apply text-white/30 hover:text-white transition-all duration-300;
+/* TERMINAL BOTTOM BAR - ULTRA COMPACT */
+.footer-bottom-terminal-compact {
+  @apply pt-8 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-6;
+}
+
+.footer-social-strip-mini {
+  @apply flex items-center gap-6;
+}
+
+.social-node-micro {
+  @apply text-white/20 hover:text-primary transition-all duration-500 hover:scale-125;
+}
+
+.ali-credit-link-mini {
+  @apply flex items-center text-[10px] font-black uppercase tracking-[0.1em] text-white/40 transition-all;
+}
+
+.footer-identity-credits-compact {
+  @apply w-full lg:w-auto;
+}
+
+.footer-id-flex-container {
+  @apply flex items-center gap-6 justify-center lg:justify-end;
+}
+
+/* RESPONSIVE RE-STACKING */
+@media (max-width: 1024px) {
+  .footer-main-grid-single-row { @apply text-center grid-cols-1 gap-12; }
+  .footer-logo-unit { @apply justify-center pr-0 border-r-0; }
+  .footer-intel-unit { @apply pl-0 items-center; }
+  .footer-contacts-compact { @apply items-center; }
+  .footer-feedback-unit { @apply mx-auto justify-self-center; }
+}
+
+@media (max-width: 768px) {
+  .footer-section { @apply py-8 px-4; }
+  .footer-container { @apply px-0; }
+  .footer-main-grid-single-row { @apply mb-8; }
+  .footer-logo-compact-row { @apply max-w-[140px]; }
+  
+  .footer-bottom-terminal-compact { 
+    @apply flex-col items-center gap-10 py-10; 
+  }
+  
+  .footer-social-strip-mini { 
+    @apply scale-[1.75] order-1 mb-6; 
+  }
+
+  .footer-id-flex-container { 
+    @apply flex-col gap-3; 
+  }
 }
