@@ -1,0 +1,115 @@
+@reference "../index.css";
+
+.officers-section {
+  @apply py-24 md:py-32 relative overflow-hidden;
+}
+
+.officers-container {
+  @apply container mx-auto px-6 max-w-7xl relative z-10;
+}
+
+/* Header: High Command Style */
+.officers-header {
+  @apply flex flex-col items-center text-center mb-24;
+}
+
+.officers-sys-badge {
+  @apply flex items-center gap-3 px-4 py-2 bg-primary/5 border border-primary/20 rounded-lg text-[9px] font-black tracking-[0.4em] uppercase text-primary mb-8;
+}
+
+.officers-title {
+  @apply text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-4 relative;
+}
+
+.officers-underline {
+  @apply w-24 h-[1px] bg-primary/40 rounded-full mx-auto mt-4;
+}
+
+/* OFFICER GRID: Tactical Formation */
+.officers-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10;
+}
+
+/* TACTICAL CARD: Premium High-Command Aesthetic */
+.officer-card {
+  @apply relative;
+  perspective: 1000px;
+}
+
+.card-frame {
+  @apply relative aspect-[3/4] rounded-[2.5rem] overflow-hidden border border-white/5 bg-white/[0.02] backdrop-blur-xl transition-all duration-700 group-hover:border-primary/40 group-hover:bg-primary/[0.03];
+}
+
+/* Scanning Indicator */
+.card-frame::before {
+  content: "";
+  @apply absolute top-0 left-0 w-full h-[2px] bg-primary/40 z-30 opacity-0 group-hover:opacity-100 transition-opacity;
+  box-shadow: 0 0 20px var(--color-primary);
+  animation: officer-scan 3s linear infinite;
+}
+
+.officer-img-wrap {
+  @apply absolute inset-0 z-0 grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105;
+}
+
+.officer-img {
+  @apply w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity;
+}
+
+/* Data Overlay: Strategic Info */
+.officer-overlay {
+  @apply absolute inset-0 z-10 p-8 flex flex-col justify-end bg-gradient-to-t from-background via-background/20 to-transparent;
+}
+
+.officer-role-tag {
+  @apply inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-[8px] font-black text-primary tracking-[0.2em] uppercase mb-4 w-fit;
+}
+
+.officer-name {
+  @apply text-2xl font-black text-white tracking-tighter leading-none mb-2 transition-all duration-500 group-hover:text-primary;
+}
+
+.officer-credentials {
+  @apply text-[9px] font-mono text-white/30 tracking-[0.3em] uppercase;
+}
+
+/* Corner HUD bits */
+.card-hud-bits {
+  @apply absolute top-6 left-6 right-6 flex justify-between z-20 opacity-40 group-hover:opacity-100 transition-opacity;
+}
+
+.hud-marker {
+  @apply w-3 h-3 border-l border-t border-primary/40;
+}
+.hud-marker-tr { @apply w-3 h-3 border-r border-t border-primary/40; }
+
+.clearance-badge {
+  @apply absolute top-8 right-8 text-[6px] font-black text-primary/40 rotate-90 origin-right transition-all duration-500 group-hover:text-primary group-hover:translate-x-2;
+}
+
+/* EXPANDABLE ACCESS (Hover Reveal) */
+.access-portal {
+  @apply absolute bottom-0 left-0 right-0 h-1 bg-primary transition-all duration-500 scale-x-0 group-hover:scale-x-100;
+}
+
+@keyframes officer-scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+/* Decorative Background */
+.officers-bg-text {
+  @apply absolute -top-20 left-1/2 -translate-x-1/2 text-[15vw] font-black text-white/[0.01] pointer-events-none select-none uppercase tracking-tighter z-0;
+}
+
+/* Tablet & Mobile Adjustments */
+@media (max-width: 1024px) {
+  .officers-title { @apply text-6xl; }
+  .officers-grid { @apply gap-6; }
+}
+
+@media (max-width: 640px) {
+  .officers-section { @apply py-20; }
+  .officer-card { @apply max-w-sm mx-auto w-full; }
+  .officer-name { @apply text-xl; }
+}

@@ -1,0 +1,154 @@
+@reference "../index.css";
+
+.best-members-section {
+  @apply py-20 md:py-32 relative overflow-hidden;
+}
+
+.best-container {
+  @apply container mx-auto px-6 max-w-7xl relative z-10;
+}
+
+/* Section Header - Aligned with Committees Style */
+.best-header {
+  @apply flex flex-col items-center text-center mb-20 md:mb-28;
+}
+
+.best-sys-badge {
+  @apply flex items-center gap-3 px-4 py-2 bg-primary/5 border border-primary/20 rounded-lg text-[9px] font-black tracking-[0.4em] uppercase text-primary mb-8;
+}
+
+.badge-status-dot {
+  @apply w-2 h-2 bg-primary rounded-full;
+  box-shadow: 0 0 10px var(--color-primary);
+  animation: pulse-glow 2s infinite;
+}
+
+.best-title {
+  @apply text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-none mb-6 relative;
+}
+
+.best-underline {
+  @apply w-20 h-[1px] bg-primary/40 rounded-full mx-auto mt-4;
+}
+
+/* Grid & Cards */
+.best-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8;
+}
+
+.member-card-wrapper {
+  @apply relative;
+}
+
+.member-card {
+  @apply relative p-6 sm:p-8 md:p-10 transition-all duration-700 overflow-hidden flex flex-col items-center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  @apply rounded-2xl md:rounded-[2rem];
+  backdrop-filter: blur(10px);
+}
+
+.member-card:hover {
+  @apply -translate-y-4;
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(0, 122, 204, 0.4);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5),
+              0 0 40px rgba(0, 122, 204, 0.1);
+}
+
+/* Visual: Avatar & Energy Area */
+.member-visual-area {
+  @apply relative mb-12 w-full aspect-square flex items-center justify-center;
+}
+
+.member-energy-ring {
+  @apply absolute inset-0 border border-primary/20 rounded-full scale-90;
+  transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.member-card:hover .member-energy-ring {
+  @apply scale-110 opacity-50;
+  border-width: 2px;
+}
+
+.member-avatar-frame {
+  @apply relative z-10 w-[80%] aspect-square rounded-full overflow-hidden border-2 border-white/10 p-2 bg-background;
+  transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.member-card:hover .member-avatar-frame {
+  @apply border-primary;
+  box-shadow: 0 0 30px rgba(0, 122, 204, 0.3);
+}
+
+.member-img {
+  @apply w-full h-full object-cover rounded-full grayscale opacity-60 transition-all duration-700;
+}
+
+.member-card:hover .member-img {
+  @apply grayscale-0 opacity-100 scale-110;
+}
+
+/* Content Area */
+.member-info {
+  @apply text-center w-full;
+}
+
+.member-name {
+  @apply text-2xl md:text-3xl font-black text-white mb-2 tracking-tight uppercase transition-colors duration-500;
+}
+
+.member-card:hover .member-name {
+  @apply text-primary;
+}
+
+.member-role {
+  @apply text-[10px] font-mono tracking-[0.4em] text-white/40 uppercase mb-8 flex items-center justify-center gap-3;
+}
+
+.member-role::before, .member-role::after {
+  content: "";
+  @apply w-8 h-[1px] bg-white/10;
+}
+
+/* Tactical Markers */
+.card-marker {
+  @apply absolute text-[8px] font-mono text-white/10 tracking-widest uppercase;
+  pointer-events: none;
+}
+
+.marker-top-right { @apply top-6 right-6; }
+.marker-top-left { @apply top-6 left-6 flex items-center gap-2; }
+.marker-bottom-left { @apply bottom-6 left-6; }
+
+.status-indicator {
+  @apply w-1.5 h-1.5 rounded-full bg-primary;
+  animation: pulse-glow 2s infinite;
+}
+
+/* Excellence Label */
+.excellence-badge {
+  @apply py-3 px-6 rounded-full border border-white/5 bg-white/5 text-[10px] font-black tracking-widest text-white/30 uppercase transition-all duration-500;
+}
+
+.member-card:hover .excellence-badge {
+  @apply border-primary/30 bg-primary/10 text-primary opacity-100;
+}
+
+@keyframes pulse-glow {
+  0% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.5; transform: scale(1); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 480px) {
+  .best-title { @apply text-4xl; }
+  .member-card { @apply p-6; }
+  .member-name { @apply text-xl; }
+  .member-role { @apply mb-6; }
+}
+
+@media (max-width: 768px) {
+  .best-members-section { @apply py-16; }
+}

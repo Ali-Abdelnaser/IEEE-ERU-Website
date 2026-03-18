@@ -1,0 +1,103 @@
+@reference "../index.css";
+
+.partners-section {
+  @apply py-24 md:py-32 relative overflow-hidden;
+  background: linear-gradient(to bottom, transparent, rgba(0, 122, 204, 0.02), transparent);
+}
+
+.partners-container {
+  @apply container mx-auto px-6 relative z-10;
+}
+
+/* Header: Standard Tactical Style */
+.partners-header {
+  @apply flex flex-col items-center text-center mb-16;
+}
+
+.partners-sys-badge {
+  @apply flex items-center gap-3 px-4 py-2 bg-primary/5 border border-primary/20 rounded-lg text-[9px] font-black tracking-[0.4em] uppercase text-primary mb-8;
+}
+
+.partners-title {
+  @apply text-4xl md:text-6xl font-black text-white tracking-tighter uppercase mb-4 relative;
+}
+
+.partners-underline {
+  @apply w-12 h-[1px] bg-primary/40 rounded-full mx-auto mt-2;
+}
+
+/* Infinite Marquee Grid */
+.partners-marq-wrap {
+  @apply relative space-y-4 md:space-y-8 py-10;
+}
+
+/* Masking for smooth edges */
+.partners-marq-wrap::before,
+.partners-marq-wrap::after {
+  content: "";
+  @apply absolute top-0 bottom-0 w-20 sm:w-32 md:w-64 z-20 pointer-events-none;
+}
+.partners-marq-wrap::before {
+  @apply left-0 bg-gradient-to-r from-background via-background/80 to-transparent;
+}
+.partners-marq-wrap::after {
+  @apply right-0 bg-gradient-to-l from-background via-background/80 to-transparent;
+}
+
+.marquee-row {
+  @apply flex items-center gap-4 md:gap-8 overflow-hidden relative;
+}
+
+.marquee-content {
+  @apply flex items-center gap-4 md:gap-8 shrink-0;
+  animation: marquee 40s linear infinite;
+}
+
+.marquee-content-rev {
+  @apply flex items-center gap-4 md:gap-8 shrink-0;
+  animation: marquee-rev 40s linear infinite;
+}
+
+/* Individual Partner Card */
+.partner-card {
+  @apply w-36 h-20 sm:w-48 sm:h-24 md:w-64 md:h-32 flex items-center justify-center p-4 md:p-6 bg-white/[0.02] border border-white/5 rounded-xl md:rounded-2xl grayscale transition-all duration-500 hover:grayscale-0 hover:bg-white/[0.05] hover:border-primary/20 hover:scale-105 relative overflow-hidden;
+}
+
+.partner-card::after {
+  content: "";
+  @apply absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000;
+}
+
+.partner-logo {
+  @apply max-w-full max-h-full object-contain opacity-40 group-hover:opacity-100 transition-opacity;
+}
+
+/* Animations */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-50% - 1rem)); }
+}
+
+@keyframes marquee-rev {
+  0% { transform: translateX(calc(-50% - 1rem)); }
+  100% { transform: translateX(0); }
+}
+
+.marquee-content:hover, 
+.marquee-content-rev:hover {
+  animation-play-state: paused;
+}
+
+/* Decorative Background Elements */
+.partners-glow {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/5 blur-[120px] rounded-full -z-10;
+}
+
+@media (max-width: 768px) {
+  .partners-section { @apply py-16; }
+  .partners-marq-wrap::before,
+  .partners-marq-wrap::after { @apply w-12; }
+  .animate-marquee, .animate-marquee-reverse {
+    animation-duration: 30s;
+  }
+}

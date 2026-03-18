@@ -36,7 +36,7 @@ const Navbar = () => {
             <motion.img 
               src={flag} 
               alt="IEEE Flag" 
-              className="h-14 w-auto object-contain"
+              className="h-10 sm:h-12 w-auto"
               whileHover={{ scale: 1.05 }}
             />
           </Link>
@@ -82,55 +82,91 @@ const Navbar = () => {
             className="mobile-toggle"
             onClick={() => setMobileMenuOpen(true)}
           >
-            <Menu size={24} />
+            <div className="hamburger-staggered">
+              <span className="ham-line line-full" />
+              <span className="ham-line line-mid" />
+              <span className="ham-line line-short" />
+            </div>
           </button>
         </div>
       </motion.div>
 
-      {/* Mobile HUD Overlay */}
+      {/* Universal Mobile HUD Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
             className="mobile-hud"
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <button 
-              className="absolute top-10 right-10 text-white/50 hover:text-white"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <X size={40} strokeWidth={1} />
-            </button>
+            {/* Background Energy Pulse */}
+            <div className="hud-ambient-glow" />
 
-            <div className="flex flex-col items-center">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 + 0.3 }}
-                >
-                  <Link 
-                    to={link.path} 
-                    className={`hud-item ${location.pathname === link.path ? 'text-white' : 'text-white/20'}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
-              
-              <motion.button 
-                className="btn-primary mt-12 w-64 py-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
+            {/* HUD Header */}
+            <div className="hud-header">
+              <div className="hud-branding">
+                 <img src={flag} alt="IEEE Flag" className="h-20 w-auto" />
+                 
+              </div>
+              <button 
+                className="hud-close-btn"
+                onClick={() => setMobileMenuOpen(false)}
               >
-                JOIN THE BRANCH
-              </motion.button>
+                <div className="close-icon-wrap">
+                   <span className="close-line line-1" />
+                   <span className="close-line line-2" />
+                </div>
+              </button>
             </div>
+
+            {/* HUD Navigation */}
+            <div className="hud-nav-center">
+              <div className="hud-links-wrap">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.name}
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 + 0.2 }}
+                    className="hud-link-outer"
+                  >
+                    <Link 
+                      to={link.path} 
+                      className={`hud-link-item group ${location.pathname === link.path ? 'active' : ''}`}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <span className="hud-link-index">0{i + 1}</span>
+                      <span className="hud-link-text">{link.name}</span>
+                      <ArrowUpRight className="hud-link-arrow" size={24} />
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+              
+              <motion.div 
+                className="hud-actions"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <button className="hud-primary-btn">
+                   JOIN us
+                </button>
+              </motion.div>
+            </div>
+
+            {/* HUD Tactical Footer */}
+            <div className="hud-footer">
+               <div className="hud-coord">IEEE_ERU_SB // PORT:8080</div>
+               <div className="hud-social-brief">
+                  CONNECTING GLOBAL ENGINEERS
+               </div>
+            </div>
+
+            {/* Technical Corner Accents */}
+            <div className="hud-corner-tl" />
+            <div className="hud-corner-br" />
           </motion.div>
         )}
       </AnimatePresence>

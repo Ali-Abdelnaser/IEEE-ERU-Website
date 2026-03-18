@@ -28,7 +28,7 @@ const About = () => {
             viewport={{ once: true }}
             className="codex-title"
           >
-            IEEE <span className="text-primary italic">ERU</span>
+            IEEE <span className="text-primary">ERU</span> SB
           </motion.h2>
         </div>
 

@@ -1,0 +1,171 @@
+@reference "../index.css";
+
+.counselor-section {
+  @apply py-24 md:py-32 relative overflow-hidden;
+}
+
+.counselor-container {
+  @apply container mx-auto px-6 max-w-7xl relative z-10;
+}
+
+/* Redesigned Header */
+.counselor-header {
+  @apply flex flex-col items-center text-center mb-20 md:mb-28;
+}
+
+.counselor-sys-badge {
+  @apply flex items-center gap-3 px-4 py-2 bg-primary/5 border border-primary/20 rounded-lg text-[9px] font-black tracking-[0.4em] uppercase text-primary mb-8;
+}
+
+.counselor-title {
+  @apply text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-none mb-4 relative;
+}
+
+.counselor-underline {
+  @apply w-20 h-[1px] bg-primary/40 rounded-full mx-auto mt-4;
+}
+
+/* TOP PROFILE: Balanced Hero Layout */
+.counselor-top-profile {
+  @apply grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center mb-24;
+}
+
+.counselor-portrait-wrap {
+  @apply lg:col-span-5;
+}
+
+.counselor-image-wrapper {
+  @apply relative aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/5;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.counselor-img {
+  @apply w-full h-full object-cover grayscale transition-all duration-700;
+}
+
+.counselor-image-wrapper:hover .counselor-img {
+  @apply grayscale-0 scale-105;
+}
+
+.counselor-bio-wrap {
+  @apply lg:col-span-7 space-y-10;
+}
+
+.counselor-name-block {
+  @apply space-y-4;
+}
+
+.counselor-rank {
+  @apply text-xs font-black tracking-[0.4em] text-primary uppercase;
+}
+
+.counselor-full-name {
+  @apply text-5xl md:text-7xl font-black text-white tracking-tight leading-[0.9] mb-4;
+}
+
+.counselor-intro-text {
+  @apply text-sm md:text-lg text-white/50 leading-relaxed max-w-2xl;
+}
+
+/* Stats Row: Matrix Style */
+.counselor-stats-grid {
+  @apply grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-6;
+}
+
+.stat-box {
+  @apply p-4 md:p-6 rounded-2xl border border-white/5 bg-white/[0.02] flex flex-col gap-1 md:gap-2;
+}
+
+.stat-box:last-child {
+  @apply col-span-2 sm:col-span-1;
+}
+
+.stat-header {
+  @apply flex items-center gap-2 md:gap-3;
+}
+
+.stat-label {
+  @apply text-[8px] font-black text-white/30 uppercase tracking-[0.2em];
+}
+
+.stat-value {
+  @apply text-2xl md:text-4xl font-black text-primary tracking-tighter;
+}
+
+/* DISTRIBUTED DATA GRID: 3 Columns below Top Profile */
+.counselor-details-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 relative z-10;
+}
+
+.detail-panel {
+  @apply p-8 rounded-[2rem] border border-white/5 bg-white/[0.01] backdrop-blur-xl relative overflow-hidden transition-all duration-500 hover:bg-white/[0.03] hover:border-primary/20;
+}
+
+.detail-panel::before {
+  content: "";
+  @apply absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent;
+}
+
+.panel-header {
+  @apply flex items-center gap-4 mb-8;
+}
+
+.panel-icon {
+  @apply p-3 rounded-xl bg-primary/10 text-primary;
+}
+
+.panel-title {
+  @apply text-xs font-black text-white tracking-[0.3em] uppercase;
+}
+
+.detail-list {
+  @apply space-y-8;
+}
+
+.detail-item {
+  @apply flex gap-5;
+}
+
+.item-bullet {
+  @apply w-1.5 h-1.5 rounded-full bg-primary/30 mt-2 shrink-0 group-hover:bg-primary transition-all duration-300 group-hover:scale-125;
+}
+
+.item-text strong {
+  @apply block text-sm font-black text-white/90 uppercase tracking-widest mb-1 group-hover:text-primary transition-colors;
+}
+
+.item-text summary {
+  @apply list-none text-sm text-white/40 leading-relaxed block;
+}
+
+/* Scanning Effect over image */
+.counselor-scan-line {
+  @apply absolute left-0 right-0 h-[1px] bg-primary/40 z-20 pointer-events-none;
+  box-shadow: 0 0 20px var(--color-primary);
+  animation: scan-loop 5s linear infinite;
+}
+
+.hud-tag-top, .hud-tag-bottom {
+  @apply absolute p-2 text-[7px] font-mono text-white/30 z-20;
+}
+.hud-tag-top { @apply top-4 left-4 border-l border-t border-white/10; }
+.hud-tag-bottom { @apply bottom-4 right-4 border-r border-b border-white/10; }
+
+@keyframes scan-loop {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .counselor-section { @apply py-16; }
+  .counselor-full-name { @apply text-4xl; }
+  .detail-panel { @apply p-6; }
+}
