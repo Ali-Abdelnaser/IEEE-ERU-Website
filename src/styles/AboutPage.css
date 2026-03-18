@@ -1,0 +1,171 @@
+@reference "../index.css";
+
+.about-page {
+  @apply min-h-screen relative overflow-hidden pt-20 pb-40 px-6;
+}
+
+/* --- THE ENERGY CORE: LOGO BACKGROUND --- */
+.about-core-visual {
+  @apply relative w-full flex flex-col items-center justify-center py-20 mb-32 z-10;
+}
+
+.core-logo-glow {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 blur-[120px] rounded-full;
+  animation: core-pulse 8s ease-in-out infinite;
+}
+
+.core-logo-plate {
+  @apply relative z-20 w-48 sm:w-64 md:w-80 lg:w-[450px] aspect-square flex items-center justify-center;
+}
+
+.about-logo-main {
+  @apply w-full h-auto drop-shadow-[0_0_50px_rgba(0,122,204,0.3)];
+}
+
+.core-rings {
+  @apply absolute inset-0 pointer-events-none;
+}
+
+.ring-particle {
+  @apply absolute inset-0 border border-primary/10 rounded-full scale-[1.5] opacity-0;
+  animation: ring-expand 4s linear infinite;
+}
+.ring-particle:nth-child(2) { animation-delay: 2s; }
+
+@keyframes ring-expand {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes core-pulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* --- REFINED HEADERS --- */
+.section-header-refined {
+  @apply flex flex-col items-center text-center mb-24 relative z-10;
+}
+
+.refined-badge {
+  @apply inline-flex items-center gap-3 px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full text-[9px] font-black tracking-[0.4em] uppercase text-primary mb-6;
+}
+
+.refined-title {
+  @apply text-4xl md:text-6xl font-black text-white tracking-tighter uppercase mb-4;
+}
+
+.refined-underline {
+  @apply w-12 h-[2px] bg-primary/40 rounded-full;
+}
+
+/* --- MISSION & VISION: TACTICAL PANELS --- */
+.mission-vision-row {
+  @apply max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mb-40 relative z-10;
+}
+
+.panel-strategic {
+  @apply p-10 md:p-16 rounded-[2.5rem] bg-white/[0.01] border border-white/5 backdrop-blur-3xl relative overflow-hidden transition-all duration-500 hover:border-primary/20 hover:bg-white/[0.03];
+}
+
+.panel-hud-bits {
+  @apply absolute top-8 left-8 flex gap-2 opacity-30;
+}
+.hud-bit { @apply w-1 h-4 bg-primary; }
+.hud-bit-dot { @apply w-1 h-1 bg-primary rounded-full; }
+
+.panel-label {
+  @apply text-[9px] font-black text-white/30 tracking-[0.5em] uppercase mb-10 block mt-4;
+}
+
+.panel-title-refined {
+  @apply text-4xl font-black text-white tracking-tight uppercase mb-8 flex items-center gap-4;
+}
+
+.panel-content-text {
+  @apply text-lg md:text-xl text-white/50 font-light leading-relaxed;
+}
+
+/* --- GOALS: DATA LIST --- */
+.goals-dossier {
+  @apply max-w-5xl mx-auto space-y-4 mb-40 relative z-10;
+}
+
+.goal-entry {
+  @apply flex items-center gap-8 p-6 bg-white/[0.01] border border-white/5 rounded-2xl transition-all duration-300 hover:bg-white/[0.03] hover:border-primary/20 hover:pl-10;
+}
+
+.entry-hex {
+  @apply w-12 h-12 flex items-center justify-center bg-primary/10 border border-primary/20 text-primary rounded-xl font-mono text-sm font-black;
+}
+
+.entry-text {
+  @apply text-lg font-black text-white/70 tracking-tight uppercase;
+}
+
+/* --- OFFERINGS: CLEAN GRID --- */
+.offerings-section-clean {
+  @apply max-w-7xl mx-auto relative z-10;
+}
+
+.offerings-grid-clean {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.clean-offer-card {
+  @apply p-10 rounded-[2rem] bg-white/[0.01] border border-white/5 transition-all duration-500 flex flex-col items-center text-center;
+}
+
+.clean-offer-card:hover {
+  @apply -translate-y-2 bg-white/[0.04] border-primary/20;
+}
+
+.offer-icon-box {
+  @apply w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center text-primary/40 mb-8 group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500;
+}
+
+.offer-name-clean {
+  @apply text-xl font-black text-white mb-4 tracking-tighter uppercase;
+}
+
+.offer-desc-clean {
+  @apply text-sm text-white/30 leading-relaxed;
+}
+
+/* RESPONSIVE OPTIMIZATION */
+@media (max-width: 1024px) {
+  .about-page { @apply pt-24 pb-32; }
+  .core-logo-plate { @apply w-56; }
+  .mission-vision-row { @apply gap-6 mb-32; }
+  .panel-strategic { @apply p-10; }
+  .refined-title { @apply text-5xl; }
+}
+
+@media (max-width: 768px) {
+  .about-page { @apply pt-20 pb-24 px-4; }
+  .about-core-visual { @apply py-12 mb-16; }
+  .core-logo-plate { @apply w-64; }
+  .core-logo-glow { @apply w-[350px] h-[350px] blur-[80px]; }
+  
+  .refined-title { @apply text-4xl; }
+  .refined-badge { @apply text-[8px] tracking-[0.3em]; }
+  
+  .mission-vision-row { @apply mb-24; }
+  .panel-strategic { @apply p-8 rounded-[2rem]; }
+  .panel-title-refined { @apply text-3xl mb-6; }
+  .panel-content-text { @apply text-base; }
+
+  .goals-dossier { @apply space-y-3 mb-24; }
+  .goal-entry { @apply p-4 gap-4 rounded-xl; }
+  .entry-hex { @apply w-10 h-10 text-xs; }
+  .entry-text { @apply text-sm; }
+
+  .offerings-grid-clean { @apply gap-4; }
+  .clean-offer-card { @apply p-8 rounded-[1.5rem]; }
+}
+
+@media (max-width: 480px) {
+  .core-logo-plate { @apply w-56; }
+  .refined-title { @apply text-3xl; }
+  .panel-strategic { @apply p-6; }
+}
