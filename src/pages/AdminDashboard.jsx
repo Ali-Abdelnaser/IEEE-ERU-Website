@@ -32,6 +32,15 @@ const AdminDashboard = () => {
 
   const [isFormOpen, setIsFormOpen] = useState(true); 
 
+  const [websiteSettings, setWebsiteSettings] = useState({
+    phone: '+20 11 58913093',
+    email: 'ieee.eru.sb@gmail.com',
+    facebook: 'https://facebook.com/IEEE.ERU.SB',
+    instagram: 'https://instagram.com/ieee_erusb/',
+    linkedin: 'https://linkedin.com/company/ieee-eru-sb/'
+  });
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+
   useEffect(() => {
     fetchApplications();
     fetchBestMembers();
@@ -51,8 +60,74 @@ const AdminDashboard = () => {
   };
 
   const fetchSettings = async () => {
-    const { data } = await supabase.from('settings').select('value').eq('key', 'is_recruitment_open').single();
-    if (data) setIsFormOpen(data.value);
+    const { data } = await supabase.from('settings').select('*');
+    if (data) {
+      const openRecruit = data.find(s => s.key === 'is_recruitment_open');
+      if (openRecruit) setIsFormOpen(openRecruit.value === true || openRecruit.value === 'true');
+      
+      const footerData = data.find(s => s.key === 'footer_settings');
+      if (footerData) {
+         try {
+           const parsed = typeof footerData.value === 'string' ? JSON.parse(footerData.value) : footerData.value;
+           setWebsiteSettings(prev => ({ ...prev, ...parsed }));
+         } catch(e) {}
+      }
+    }
+  };
+
+  const saveWebsiteSettings = async (e) => {
+    e.preventDefault();
+    setIsSavingSettings(true);
+    try {
+      const { data, error: selectError } = await supabase.from('settings').select('id').eq('key', 'footer_settings');
+      if (selectError) throw selectError;
+
+      const stringifiedValue = JSON.stringify(websiteSettings);
+      if (data && data.length > 0) {
+        const { error: updateError } = await supabase.from('settings').update({ value: stringifiedValue }).eq('key', 'footer_settings');
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await supabase.from('settings').insert([{ key: 'footer_settings', value: stringifiedValue }]);
+        if (insertError) throw insertError;
+      }
+      alert('Settings Saved Successfully!');
+    } catch (err) {
+      alert("Error saving: " + err.message);
+    }
+    setIsSavingSettings(false);
+  };
+
+  const exportApplicationsToCSV = () => {
+    if (applications.length === 0) {
+      alert("No data available to export.");
+      return;
+    }
+    // Get headers dynamically from the first record
+    const headers = Object.keys(applications[0]);
+    const csvRows = [
+      headers,
+      ...applications.map(app => headers.map(header => {
+        let cell = String(app[header] ?? '');
+        // Escape quotes
+        cell = cell.replace(/"/g, '""');
+        // Wrap cell in quotes if it contains a comma, newline, or quote
+        if (cell.search(/("|,|\n)/g) >= 0) {
+          cell = `"${cell}"`;
+        }
+        return cell;
+      }))
+    ];
+    
+    const csvString = csvRows.map(row => row.join(',')).join('\n');
+    // Add BOM (\uFEFF) for proper UTF-8 handling in Excel
+    const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `IEEE_ERU_Applications_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const deleteSuggestion = async (id) => {
@@ -93,7 +168,7 @@ const AdminDashboard = () => {
   const toggleForm = async () => {
     const newState = !isFormOpen;
     setIsFormOpen(newState);
-    await supabase.from('settings').update({ value: newState }).eq('key', 'is_recruitment_open');
+    await supabase.from('settings').update({ value: String(newState) }).eq('key', 'is_recruitment_open');
   };
 
   const addBestMember = async (e) => {
@@ -228,7 +303,7 @@ const AdminDashboard = () => {
              <h1 className="text-4xl font-black uppercase tracking-tighter">Command <span className="text-primary">Center</span></h1>
           </div>
           <div className="flex flex-wrap gap-4">
-             {activeTab === 'applications' && <button onClick={() => {}} className="admin-action-btn secondary"><FileSpreadsheet size={14} /> Export</button>}
+             {activeTab === 'applications' && <button onClick={exportApplicationsToCSV} className="admin-action-btn secondary"><FileSpreadsheet size={14} /> Export</button>}
              {activeTab === 'best_members' && <button onClick={() => setIsAddingMember(true)} className="admin-action-btn"><Plus size={14} /> Add Operative</button>}
              {activeTab === 'events' && <button onClick={() => setIsAddingEvent(true)} className="admin-action-btn"><Plus size={14} /> Register Event</button>}
              <button onClick={() => { fetchApplications(); fetchBestMembers(); fetchEvents(); fetchSuggestions(); fetchSettings(); }} className="admin-action-btn secondary"><RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Refresh</button>
@@ -236,7 +311,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="flex flex-wrap gap-4 mb-10 p-2 bg-white/[0.02] border border-white/5 rounded-2xl w-fit">
-           {['applications', 'best_members', 'events', 'suggestions'].map(tab => (
+           {['applications', 'best_members', 'events', 'suggestions', 'settings'].map(tab => (
              <button key={tab} onClick={() => setActiveTab(tab)} className={`px-10 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-primary text-white shadow-xl shadow-primary/20' : 'text-white/30 hover:text-white'}`}>
                 {tab.replace('_', ' ')}
              </button>
@@ -254,7 +329,7 @@ const AdminDashboard = () => {
                     </button>
                  </div>
               </div>
-              <div className="admin-table-container"><table className="admin-table"><thead><tr><th>Identity</th><th>Position</th><th>Credentials</th><th>Log</th></tr></thead><tbody>{applications.map(app=>(<tr key={app.id}><td><div className="font-bold text-white uppercase">{app.first_name} {app.last_name}</div><div className="text-[10px] opacity-20">{app.email}</div></td><td><span className="admin-badge badge-accepted">{app.position}</span></td><td className="text-xs uppercase opacity-30">{app.faculty} / YEAR_{app.year_of_study}</td><td><a href={app.cv_url} target="_blank" className="text-primary hover:text-white flex items-center gap-2 text-[10px] font-black uppercase"><span className="border-b border-primary/20">Access Dossier</span><ExternalLink size={12}/></a></td></tr>))}</tbody></table></div>
+              <div className="admin-table-container"><table className="admin-table"><thead><tr><th>Identity</th><th>Contact</th><th>Position</th><th>Credentials</th><th>Log</th></tr></thead><tbody>{applications.map(app=>(<tr key={app.id}><td><div className="font-bold text-white uppercase">{app.first_name} {app.last_name}</div></td><td><div className="text-[10px] opacity-40 mb-1">{app.email}</div><div className="text-[10px] text-primary tracking-widest font-black">{app.phone}</div></td><td><span className="admin-badge badge-accepted">{app.position}</span></td><td className="text-xs uppercase opacity-30">{app.faculty} / YEAR_{app.year_of_study}</td><td><a href={app.cv_url} target="_blank" className="text-primary hover:text-white flex items-center gap-2 text-[10px] font-black uppercase"><span className="border-b border-primary/20">Access Dossier</span><ExternalLink size={12}/></a></td></tr>))}</tbody></table></div>
            </div>
         ) : activeTab === 'suggestions' ? (
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -279,12 +354,44 @@ const AdminDashboard = () => {
               {bestMembers.map(m => (
                 <div key={m.id} className="admin-card group">
                    <div className="flex items-center gap-4">
-                      <img src={m.image_url} className="w-16 h-16 rounded-xl object-cover border border-white/10" />
+                      <img src={m.image_url} className="w-16 h-16 rounded-xl object-cover object-top border border-white/10" />
                       <div className="flex-grow"><h4 className="font-bold text-white uppercase tracking-tighter">{m.name}</h4><p className="text-[10px] text-primary/60 font-black uppercase">{m.role}</p></div>
                       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all"><button onClick={() => { setEditingMember({...m, imageFile: null}); setIsEditingMember(true); }} className="p-3 bg-white/5 rounded-lg text-white hover:bg-primary"><Edit size={14}/></button><button onClick={() => deleteMember(m.id)} className="p-3 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"><Trash2 size={14}/></button></div>
                    </div>
                 </div>
               ))}
+           </div>
+        ) : activeTab === 'settings' ? (
+           <div className="admin-card max-w-2xl">
+              <div className="flex items-center gap-3 mb-8 text-primary">
+                 <Settings size={24} />
+                 <h3 className="text-2xl font-black uppercase">Platform Variables</h3>
+              </div>
+              <form onSubmit={saveWebsiteSettings} className="space-y-6">
+                 <div>
+                    <label className="field-label">Contact Phone</label>
+                    <input type="text" required value={websiteSettings.phone} onChange={e => setWebsiteSettings({...websiteSettings, phone: e.target.value})} className="login-field" />
+                 </div>
+                 <div>
+                    <label className="field-label">Contact Email</label>
+                    <input type="text" required value={websiteSettings.email} onChange={e => setWebsiteSettings({...websiteSettings, email: e.target.value})} className="login-field" />
+                 </div>
+                 <div>
+                    <label className="field-label">Facebook Link</label>
+                    <input type="url" required value={websiteSettings.facebook} onChange={e => setWebsiteSettings({...websiteSettings, facebook: e.target.value})} className="login-field" />
+                 </div>
+                 <div>
+                    <label className="field-label">Instagram Link</label>
+                    <input type="url" required value={websiteSettings.instagram} onChange={e => setWebsiteSettings({...websiteSettings, instagram: e.target.value})} className="login-field" />
+                 </div>
+                 <div>
+                    <label className="field-label">LinkedIn Link</label>
+                    <input type="url" required value={websiteSettings.linkedin} onChange={e => setWebsiteSettings({...websiteSettings, linkedin: e.target.value})} className="login-field" />
+                 </div>
+                 <button type="submit" disabled={isSavingSettings} className="admin-action-btn w-full justify-center py-4 mt-6">
+                    {isSavingSettings ? 'Deploying...' : 'Deploy Updates'}
+                 </button>
+              </form>
            </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

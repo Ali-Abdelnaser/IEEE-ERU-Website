@@ -7,6 +7,8 @@ import EventsPage from './pages/EventsPage'
 import EventDetailPage from './pages/EventDetailPage'
 import JoinUsPage from './pages/JoinUsPage'
 import AdminDashboard from './pages/AdminDashboard'
+import ScrollToTop from './components/ScrollToTop'
+import ScrollUpButton from './components/ScrollUpButton'
 
 // Dummy pages for now
 const Teams = () => <div className="pt-32 min-h-screen text-center"><h1>Teams Page Coming Soon</h1></div>
@@ -14,6 +16,8 @@ const Teams = () => <div className="pt-32 min-h-screen text-center"><h1>Teams Pa
 function App() {
   return (
     <Router>
+      <ScrollToTop />
+      <ScrollUpButton />
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">

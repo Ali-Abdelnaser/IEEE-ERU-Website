@@ -82,7 +82,7 @@
 }
 
 .member-img {
-  @apply w-full h-full object-cover rounded-full grayscale opacity-60 transition-all duration-700;
+  @apply w-full h-full object-cover object-top rounded-full grayscale opacity-60 transition-all duration-700;
 }
 
 .member-card:hover .member-img {

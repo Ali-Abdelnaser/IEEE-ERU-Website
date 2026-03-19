@@ -52,6 +52,9 @@ const Navbar = () => {
                 e.preventDefault();
               } else {
                 setLogoClicks(newCount);
+                if (location.pathname === '/') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }
             }}
           >
@@ -78,6 +81,11 @@ const Navbar = () => {
                 key={link.name} 
                 to={link.path} 
                 className={`nav-link ${isActive ? 'nav-link-active' : 'nav-link-inactive'}`}
+                onClick={(e) => {
+                  if (isActive) {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
               >
                 {isActive && (
                   <motion.div
@@ -96,7 +104,15 @@ const Navbar = () => {
 
         {/* Right: Actions */}
         <div className="nav-action-area flex items-center gap-4">
-          <Link to="/join" className="dock-btn hidden md:flex items-center gap-2">
+          <Link 
+            to="/join" 
+            className="dock-btn hidden md:flex items-center gap-2"
+            onClick={() => {
+              if (location.pathname === '/join') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
             JOIN <ArrowUpRight size={14} />
           </Link>
           
@@ -156,7 +172,12 @@ const Navbar = () => {
                     <Link 
                       to={link.path} 
                       className={`hud-link-item group ${location.pathname === link.path ? 'active' : ''}`}
-                      onClick={() => setMobileMenuOpen(false)}
+                      onClick={() => {
+                        setMobileMenuOpen(false)
+                        if (location.pathname === link.path) {
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                      }}
                     >
                       <span className="hud-link-index">0{i + 1}</span>
                       <span className="hud-link-text">{link.name}</span>
@@ -172,7 +193,16 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
               >
-                <Link to="/join" className="hud-primary-btn inline-block text-center w-full" onClick={() => setMobileMenuOpen(false)}>
+                <Link 
+                  to="/join" 
+                  className="hud-primary-btn inline-block text-center w-full" 
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (location.pathname === '/join') {
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                  }}
+                >
                    JOIN US
                 </Link>
               </motion.div>

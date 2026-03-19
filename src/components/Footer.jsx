@@ -10,6 +10,27 @@ const Footer = () => {
   const [status, setStatus] = useState('idle'); // idle, sending, success, error
   const currentYear = new Date().getFullYear();
 
+  const [footerData, setFooterData] = useState({
+    phone: '+20 11 58913093',
+    email: 'ieee.eru.sb@gmail.com',
+    facebook: 'https://facebook.com/IEEE.ERU.SB',
+    instagram: 'https://instagram.com/ieee_erusb/',
+    linkedin: 'https://linkedin.com/company/ieee-eru-sb/'
+  });
+
+  useEffect(() => {
+    const fetchFooterData = async () => {
+      const { data } = await supabase.from('settings').select('value').eq('key', 'footer_settings').single();
+      if (data && data.value) {
+        try {
+          const parsed = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+          setFooterData(prev => ({ ...prev, ...parsed }));
+        } catch(e) {}
+      }
+    };
+    fetchFooterData();
+  }, []);
+
   const submitSuggestion = async (e) => {
     e.preventDefault();
     if (!suggestion.trim() || status === 'sending') return;
@@ -58,8 +79,8 @@ const Footer = () => {
                  Building the next generation.
               </p>
               <div className="footer-contacts-compact mt-8">
-                 <div className="contact-row-mini md:text-[11px]"><Phone size={14}/>+20 11 58913093</div>
-                 <div className="contact-row-mini md:text-[11px] mt-2"><Mail size={14}/>ieee.eru.sb@gmail.com</div>
+                 <div className="contact-row-mini md:text-[11px]"><Phone size={14}/>{footerData.phone}</div>
+                 <div className="contact-row-mini md:text-[11px] mt-2"><Mail size={14}/>{footerData.email}</div>
               </div>
            </div>
 
@@ -122,9 +143,9 @@ const Footer = () => {
         {/* BOTTOM TERMINAL UPGRADED */}
         <div className="footer-bottom-terminal-compact">
            <div className="footer-social-strip-mini">
-              <a href="https://facebook.com/IEEE.ERU.SB" target="_blank" className="social-node-micro"><Facebook size={18}/></a>
-              <a href="https://instagram.com/ieee_erusb/" target="_blank" className="social-node-micro"><Instagram size={18}/></a>
-              <a href="https://linkedin.com/company/ieee-eru-sb/" target="_blank" className="social-node-micro"><Linkedin size={18}/></a>
+              <a href={footerData.facebook} target="_blank" className="social-node-micro"><Facebook size={18}/></a>
+              <a href={footerData.instagram} target="_blank" className="social-node-micro"><Instagram size={18}/></a>
+              <a href={footerData.linkedin} target="_blank" className="social-node-micro"><Linkedin size={18}/></a>
            </div>
 
            <div className="footer-identity-credits-compact">

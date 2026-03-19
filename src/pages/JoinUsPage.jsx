@@ -46,7 +46,7 @@ const JoinUsPage = () => {
       .eq('key', 'is_recruitment_open')
       .single();
 
-    if (data) setIsFormOpen(data.value);
+    if (data) setIsFormOpen(data.value === true || data.value === 'true');
     setIsLoadingConfig(false);
     if (error) console.error("Sync Error:", error);
   };
