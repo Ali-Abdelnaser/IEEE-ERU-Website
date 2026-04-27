@@ -151,10 +151,6 @@ const Footer = () => {
            <div className="footer-identity-credits-compact">
               <div className="footer-id-flex-container">
                  <span className="text-[12px] text-white/40 uppercase font-black tracking-[0.2em]">© {currentYear} IEEE ERU</span>
-                 <a href="https://www.linkedin.com/in/ali-abdelnaser-947230295/" target="_blank" className="ali-credit-link-mini group">
-                    Created by <span className="text-primary ml-1 group-hover:text-white transition-all text-[12px] md:text-[13px]">Ali Abdelnaser</span>
-                    <ArrowRight size={14} className="ml-1 opacity-40 group-hover:translate-x-1" />
-                 </a>
               </div>
            </div>
         </div>
